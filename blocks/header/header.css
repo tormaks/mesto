@@ -2,3 +2,11 @@
 	position: relative;
 }
 
+.header::after {
+	content: ' ';
+	background-color: #545454;
+	height: 1px;
+	width: 100%;
+	position: absolute;
+	top: 80px;
+}
