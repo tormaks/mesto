@@ -6,4 +6,9 @@
 	max-height: 46px;
 	padding: 10px 62px;
 	align-self: center;
+	transition: opacity 0.15s linear;
+}
+
+.profile__add-button:hover {
+	opacity: 0.6;
 }

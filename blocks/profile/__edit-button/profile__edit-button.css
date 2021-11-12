@@ -5,4 +5,9 @@
 	max-width: 24px;
 	max-height: 24px;
 	align-self: center;
+	transition: opacity 0.15s linear;
+}
+
+.profile__edit-button:hover {
+	opacity: 0.6;
 }

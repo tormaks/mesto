@@ -4,4 +4,10 @@
 	max-width: 22px;
 	max-height: 19px;
 	padding: 0;
+	cursor: pointer;
+	transition: opacity 0.15s linear;
+}
+
+.card__like:hover {
+	opacity: 0.5;
 }
