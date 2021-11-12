@@ -1,4 +1,6 @@
 .profile {
 	padding: 77.25px 0px 0px 0px;
 	display: flex;
+	max-width: 880px;
+	justify-content: space-between;
 }

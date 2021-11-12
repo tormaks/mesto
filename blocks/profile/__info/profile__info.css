@@ -1,5 +1,4 @@
 .profile__info {
-	margin: 0px 244px 0px 0px;
-	max-width: 336px;
 	align-self: center;
+	flex: 1 1 auto;
 }
