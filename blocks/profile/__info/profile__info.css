@@ -2,3 +2,10 @@
 	align-self: center;
 	flex: 1 1 auto;
 }
+
+
+@media screen and (max-width: 432px) {
+	.profile__info {
+		margin: 0px 0px 36px 0px;
+	}
+}

@@ -2,3 +2,9 @@
 	padding: 47.25px 0px 0px 0px;
 	max-width: 880px;
 }
+
+@media screen and (max-width: 425px) {
+	.cards {
+		padding: 36px 0px 0px 0px;
+	}
+}

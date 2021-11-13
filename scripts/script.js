@@ -7,7 +7,7 @@ let buttonClosePopup = popup.querySelector('.popup__close');
 let popupForm = popup.querySelector('form');
 let inputs = popupForm.querySelectorAll('input');
 let profileName = document.querySelector('.profile__name');
-let profileJob = document.querySelector('.profile__description');
+let profileJob = document.querySelector('.profile__job');
 
 //Добавить карточку в избранное
 for (let i = 0; i < buttonLike.length; i++) { 
@@ -20,6 +20,7 @@ for (let i = 0; i < buttonLike.length; i++) {
 	});
 }
 
+//Открыть/закрыть popup
 buttonEditProfile.addEventListener('click', function() {
 	inputs[0].value = profileName.textContent;
 	inputs[1].value = profileJob.textContent;
@@ -29,6 +30,7 @@ buttonEditProfile.addEventListener('click', function() {
 	})
 })
 
+//Отправка формы (изменение profileName и profileJob)
 popupForm.addEventListener('submit', function(evt) {
 	evt.preventDefault();
 	let newName = inputs[0].value;

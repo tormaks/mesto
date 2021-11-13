@@ -12,3 +12,17 @@
 .popup__close:hover {
 	opacity: 0.6;
 }
+
+@media screen and (max-width: 600px) {
+	.popup__close {
+		top: -10%;
+		right: -8%;
+	}
+}
+
+@media screen and (max-width: 432px) {
+	.popup__close {
+		top: -12%;
+		right: 0;
+	}
+}

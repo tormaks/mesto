@@ -1,3 +1,15 @@
 .card {
 	max-width: 282px;
 }
+
+@media screen and (max-width: 720px) {
+	.card {
+		max-width: 100%;
+	}
+}
+
+@media screen and (max-width: 432px) {
+	.card {
+		max-width: 282px;
+	}
+}
