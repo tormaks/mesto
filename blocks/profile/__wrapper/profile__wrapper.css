@@ -13,5 +13,6 @@
 @media screen and (max-width: 432px) {
 	.profile__wrapper {
 		margin: 0px 0px 14px 0px;
+		justify-content: center;
 	}
 }
