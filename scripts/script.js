@@ -1,40 +1,39 @@
 'use strict'
 
-let buttonLike = document.querySelectorAll('.card__like');
 let buttonEditProfile = document.querySelector('.profile__edit-button');
 let popup = document.querySelector('.popup');
 let buttonClosePopup = popup.querySelector('.popup__close');
 let popupForm = popup.querySelector('form');
-let inputs = popupForm.querySelectorAll('input');
+let inputName = popupForm.querySelector('.popup__input_value_name');
+let inputJob = popupForm.querySelector('.popup__input_value_job');
 let profileName = document.querySelector('.profile__name');
 let profileJob = document.querySelector('.profile__job');
 
-//Добавить карточку в избранное
-for (let i = 0; i < buttonLike.length; i++) { 
-	buttonLike[i].addEventListener('click', function () {
-		buttonLike[i].classList.toggle('card__like_active');
-	});
+//Открыть popup
+function openPopup() {
+	inputName.value = profileName.textContent;
+	inputJob.value = profileJob.textContent;
+	popup.classList.toggle('popup_active');
 }
 
-//Открыть/закрыть popup
-buttonEditProfile.addEventListener('click', function() {
-	inputs[0].value = profileName.textContent;
-	inputs[1].value = profileJob.textContent;
-	popup.classList.toggle('popup_active');
-	buttonClosePopup.addEventListener('click', function() {
-		popup.classList.remove('popup_active');
-	})
-})
+//Закрыть popup
+function closePopup() {
+	popup.classList.remove('popup_active');
+}
 
-//Отправка формы (изменение profileName и profileJob)
-popupForm.addEventListener('submit', function(evt) {
+//Отправить форму
+function sendForm(evt) {
 	evt.preventDefault();
-	let newName = inputs[0].value;
-	let newJob = inputs[1].value;
+	let newName = inputName.value;
+	let newJob = inputJob.value;
 	profileName.textContent = `${newName}`;
 	profileJob.textContent = `${newJob}`;
-	popup.classList.remove('popup_active');
-})
+	closePopup();
+}
+
+buttonEditProfile.addEventListener('click', openPopup);
+buttonClosePopup.addEventListener('click', closePopup);
+popupForm.addEventListener('submit', sendForm);
 
 
 
