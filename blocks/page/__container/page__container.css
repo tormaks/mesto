@@ -2,13 +2,14 @@
 	min-width: 320px;
 	max-width: 880px;
 	width: 100%;
-	padding: 45px 20px 60px;
+	padding: 45px 10px 60px;
 	min-height: 100%;
 	margin: 0 auto;
+	box-sizing: border-box;
 }
 
 
-@media screen and (max-width: 432px) {
+@media screen and (max-width: 425px) {
 	.page__container {
 		padding: 28px 19px 36px;
 	}

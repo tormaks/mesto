@@ -12,7 +12,7 @@
 }
 
 
-@media screen and (max-width: 432px) {
+@media screen and (max-width: 425px) {
 	.header::after {
 		bottom: -30px;
 		margin: 0px -20px;

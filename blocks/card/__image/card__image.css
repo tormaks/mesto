@@ -9,13 +9,13 @@
 	border-top-left-radius: 10px;
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: 768px) {
 	.card__image {
 		max-width: 100%;
 	}
 }
 
-@media screen and (max-width: 432px) {
+@media screen and (max-width: 425px) {
 	.card__image {
 		max-width: 282px;
 		max-height: 282px;

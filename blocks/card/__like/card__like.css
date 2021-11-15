@@ -1,11 +1,11 @@
 .card__like {
 	background-image: url(../../../images/like.svg);
 	background-repeat: no-repeat;
-	width: 22px;
+	width: 28px;
 	height: 19px;
 	background-color: transparent;
-	border: none;
 	padding: 0;
+	border: none;
 	cursor: pointer;
 	transition: opacity 0.15s linear;
 }
