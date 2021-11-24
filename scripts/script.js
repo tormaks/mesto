@@ -8,6 +8,12 @@ let inputName = popupForm.querySelector('.popup__input_value_name');
 let inputJob = popupForm.querySelector('.popup__input_value_job');
 let profileName = document.querySelector('.profile__name');
 let profileJob = document.querySelector('.profile__job');
+let buttonsLike = document.querySelectorAll('.card__like');
+
+//Поставить лайк карточке
+function putLike(buttonLike) {
+	buttonLike.addEventListener('click', () => buttonLike.classList.toggle('card__like_active'));
+}
 
 //Открыть popup
 function openPopup() {
@@ -34,6 +40,7 @@ function sendForm(evt) {
 buttonEditProfile.addEventListener('click', openPopup);
 buttonClosePopup.addEventListener('click', closePopup);
 popupForm.addEventListener('submit', sendForm);
+buttonsLike.forEach(putLike);
 
 
 
