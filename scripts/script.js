@@ -57,9 +57,18 @@ const inputLink = popupFormAddCard.querySelector('.popup__input_value_link');
 const buttonsLike = document.querySelectorAll('.card__like');
 const buttonsClosePopup = document.querySelectorAll('.popup__close');
 
+const buttonsDeleteCard = document.querySelectorAll('.card__trash');
+
 //Поставить лайк карточке
 function putLike(buttonLike) {
 	buttonLike.addEventListener('click', () => buttonLike.classList.toggle('card__like_active'));
+}
+
+function deleteCard(buttonDelete) {
+	buttonDelete.addEventListener('click', () => {
+		const listCard = buttonDelete.closest('.card');
+		listCard.remove();
+	})
 }
 
 //Открыть popup добавления карточки
@@ -90,6 +99,7 @@ function sendFormEditProfile(evt) {
 	closePopup();
 }
 
+//Отправить форму добавления карточки
 function sendFormAddCard(evt) {
 	evt.preventDefault();
 	const newCard = { 
@@ -103,7 +113,9 @@ function sendFormAddCard(evt) {
 	cardElement.querySelector('.card__heading').textContent = `${newCard.name}`; 
 	cardsList.prepend(cardElement);
 	const buttonLike = cardElement.querySelector('.card__like');
+	const buttonDelete = cardElement.querySelector('.card__trash');
 	putLike(buttonLike);
+	deleteCard(buttonDelete);
 }
 
 
@@ -115,3 +127,4 @@ buttonsClosePopup.forEach(function(buttonClosePopup) {
 popupFormEditProfile.addEventListener('submit', sendFormEditProfile);
 popupFormAddCard.addEventListener('submit', sendFormAddCard);
 buttonsLike.forEach(putLike);
+buttonsDeleteCard.forEach(deleteCard);
