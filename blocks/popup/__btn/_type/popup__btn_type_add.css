@@ -1,0 +1,17 @@
+.popup__btn_type_add {
+	padding: 15px 142px;
+}
+
+@media screen and (max-width: 535px) {
+	.popup__btn_type_add {
+		padding: 10px 110px;
+	}
+}
+
+@media screen and (max-width: 425px) {
+	.popup__btn_type_add {
+		font-size: 14px;
+		line-height: 16.94px;
+		padding: 14px 92px;
+	}
+}

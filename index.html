@@ -42,26 +42,33 @@
 		<footer class="footer">
 			<p class="footer__copyright">&copy; 2021 Mesto Russia</p>
 		</footer>
-		<div class="popup">
+		<div class="popup popup_type_profile">
 			<div class="popup__container">
 				<form action="#" class="popup__form" name="changeData">
 					<h2 class="popup__title">Редактировать профиль</h2>
 					<input type="text" required placeholder="Имя" name="name" class="popup__input popup__input_value_name">
 					<input type="text" required placeholder="Деятельность" name="job" class="popup__input popup__input_value_job">
-					<button type="submit" class="popup__save" aria-label="Сохранить">Сохранить</button>
+					<button type="submit" class="popup__btn" aria-label="Сохранить">Сохранить</button>
 				</form>
 				<button type="button" class="popup__close" aria-label="Закрыть"></button>
 			</div>
 		</div>
-		<div class="popup popup-add-card">
+		<div class="popup popup_type_place">
 			<div class="popup__container">
 				<form action="#" class="popup__form" name="addCard">
 					<h2 class="popup__title">Новое место</h2>
 					<input type="text" required placeholder="Название" name="place" class="popup__input popup__input_value_place">
 					<input type="text" required placeholder="Ссылка на картинку" name="link" class="popup__input popup__input_value_link">
-					<button type="submit" class="popup__save popup__add" aria-label="Сохранить">Создать</button>
+					<button type="submit" class="popup__btn popup__btn_type_add" aria-label="Сохранить">Создать</button>
 				</form>
 				<button type="button" class="popup__close" aria-label="Закрыть"></button>
+			</div>
+		</div>
+		<div class="popup popup_type_picture">
+			<div class="popup__container-picture">
+				<img src="" alt="" class="popup__picture">
+				<p class="popup__picture-description"></p>
+				<button type="button" class="popup__close popup__close_type_picture" aria-label="Закрыть"></button>
 			</div>
 		</div>
 	</div>
