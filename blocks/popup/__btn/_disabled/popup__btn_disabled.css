@@ -1,0 +1,24 @@
+.popup__btn_disabled {
+	color: black;
+	background-color: transparent;
+	border: 1px solid #000;
+	opacity: 0.3;
+	cursor: none;
+	pointer-events: none;
+	transition: none;
+	padding: 14px 131px;
+}
+
+@media screen and (max-width: 535px) {
+	.popup__btn {
+		padding: 9px 99px;
+	}
+}
+
+@media screen and (max-width: 425px) {
+	.popup__btn {
+		font-size: 14px;
+		line-height: 16.94px;
+		padding: 13px 81px;
+	}
+}
