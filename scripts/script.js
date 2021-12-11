@@ -24,6 +24,8 @@ const buttonCloseViewPicture = popupViewPicture.querySelector('.popup__close_typ
 const popupPicture = popupViewPicture.querySelector('.popup__picture');
 const popupPictureDescription = popupViewPicture.querySelector('.popup__picture-description');
 
+const popups = document.querySelectorAll('.popup');
+
 //Создать карточку
 function createCard(card) {
 	const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -43,7 +45,7 @@ function createCard(card) {
 const renderCard = (cardElement) => cardsList.prepend(cardElement);
 
 //Добавление начальных карточек из initialCards.js
-initialCards.forEach((initialCard) => {renderCard(createCard(initialCard))});
+initialCards.forEach((initialCard) => {renderCard(createCard(initialCard));});
 
 //Поставить лайк карточке
 function putLike(buttonLikeCard) {
@@ -55,7 +57,7 @@ function deleteCard(buttonDeleteCard) {
 	buttonDeleteCard.addEventListener('click', () => {
 		const cardItem = buttonDeleteCard.closest('.card');
 		cardItem.remove();
-	})
+	});
 }
 
 //Открыть попап картинки
@@ -65,14 +67,54 @@ function openPopupViewPicture(pictureCard) {
 		popupPicture.src = pictureCard.src;
 		popupPicture.alt = pictureCard.alt;
 		popupPictureDescription.textContent = pictureCard.alt;
-	})
+	});
+}
+
+//Закрыть попап нажав на клавишу Escape
+function closePopupPushEsc(evt) {
+	const popup = document.querySelector('.popup_active');
+	if (evt.key === 'Escape') {
+		closePopup(popup);
+	}
+}
+
+//Закрыть попап нажав на оверлей 
+function closePopupPushOverlay(evt) {
+	if (evt.target.classList.contains('popup')) {
+		closePopup(evt.target);
+	}
 }
 
 //Открыть попап
-const openPopup = (popup) => popup.classList.add('popup_active');
+const openPopup = (popup) => {
+	popup.classList.add('popup_active');
+	popup.addEventListener('click', closePopupPushOverlay);
+	document.addEventListener('keydown', closePopupPushEsc);
+};
 
 //Закрыть попап
-const closePopup = (popup) => popup.classList.remove('popup_active');
+const closePopup = (popup) => {
+	popup.classList.remove('popup_active');
+	popup.removeEventListener('click', closePopupPushOverlay);
+	document.removeEventListener('keydown', closePopupPushEsc);
+	const form = popup.querySelector('.popup__form');
+	form.reset();
+	resetInputs(formData, popup);
+};
+
+function resetInputs(formData, popup) {
+	const formElement = popup.querySelector('.popup__form');
+	const inputsList = formElement.querySelectorAll('.popup__input');
+	inputsList.forEach(input => {
+		hideInputError(formData, formElement, input);
+	});
+	const button = formElement.querySelector(`${formData.submitButtonSelector}`);
+	if (formElement.getAttribute('name') === 'addCard') {
+		button.classList.add('popup__btn_disabled');
+	} else {
+		button.classList.remove(`${formData.inactiveButtonClass}`);
+	}
+}
 
 //Открыть popup изменения профиля
 function openPopupEditProfile() {
