@@ -35,9 +35,9 @@ function createCard(card) {
 	cardImage.src = card.link;
 	cardImage.alt = card.name;
 	cardElement.querySelector('.card__heading').textContent = card.name;
-	buttonLikeCard.addEventListener('click', putLike(buttonLikeCard));
-	buttonDeleteCard.addEventListener('click', deleteCard(buttonDeleteCard));
-	cardImage.addEventListener('click', openPopupViewPicture(cardImage));
+	buttonLikeCard.addEventListener('click', evt => putLike(evt));
+	buttonDeleteCard.addEventListener('click', evt => deleteCard(evt));
+	cardImage.addEventListener('click', () => openPopupViewPicture(card.name, card.link));
 	return cardElement;
 }
 
@@ -48,45 +48,30 @@ const renderCard = (cardElement) => cardsList.prepend(cardElement);
 initialCards.forEach((initialCard) => {renderCard(createCard(initialCard));});
 
 //Поставить лайк карточке
-function putLike(buttonLikeCard) {
-	buttonLikeCard.addEventListener('click', () => buttonLikeCard.classList.toggle('card__like_active'));
+function putLike(evt) {
+	evt.target.classList.toggle('card__like_active');
 }
 
 //Удалить карточку
-function deleteCard(buttonDeleteCard) {
-	buttonDeleteCard.addEventListener('click', () => {
-		const cardItem = buttonDeleteCard.closest('.card');
-		cardItem.remove();
-	});
+function deleteCard(evt) {
+	const cardItem = evt.target.closest('.card');
+	console.log(cardItem);
+	cardItem.remove();
 }
 
 //Открыть попап картинки
-function openPopupViewPicture(pictureCard) {
-	pictureCard.addEventListener('click', function() {
-		openPopup(popupViewPicture);
-		popupPicture.src = pictureCard.src;
-		popupPicture.alt = pictureCard.alt;
-		popupPictureDescription.textContent = pictureCard.alt;
-	});
-}
-
-//Закрыть попап нажав на клавишу Escape
-function closePopupPushEsc(evt) {
-	const popup = document.querySelector('.popup_active');
-	if (evt.key === 'Escape') {
-		closePopup(popup);
-	}
-}
-
-//Закрыть попап нажав на оверлей 
-function closePopupPushOverlay(evt) {
-	if (evt.target.classList.contains('popup')) {
-		closePopup(evt.target);
-	}
+function openPopupViewPicture(cardName, cardSrc) {
+	popupPicture.src = cardSrc;
+	popupPicture.alt = cardName;
+	popupPictureDescription.textContent = cardName;
+	openPopup(popupViewPicture);
 }
 
 //Открыть попап
 const openPopup = (popup) => {
+	if (popup.querySelector(`${formData.formSelector}`)) {
+		openSwitchStateButton(formData, popup);
+	}
 	popup.classList.add('popup_active');
 	popup.addEventListener('click', closePopupPushOverlay);
 	document.addEventListener('keydown', closePopupPushEsc);
@@ -97,39 +82,46 @@ const closePopup = (popup) => {
 	popup.classList.remove('popup_active');
 	popup.removeEventListener('click', closePopupPushOverlay);
 	document.removeEventListener('keydown', closePopupPushEsc);
-	const form = popup.querySelector('.popup__form');
-	form.reset();
-	resetInputs(formData, popup);
 };
 
-function resetInputs(formData, popup) {
-	const formElement = popup.querySelector('.popup__form');
-	const inputsList = formElement.querySelectorAll('.popup__input');
-	inputsList.forEach(input => {
-		hideInputError(formData, formElement, input);
-	});
-	const button = formElement.querySelector(`${formData.submitButtonSelector}`);
-	if (formElement.getAttribute('name') === 'addCard') {
-		button.classList.add('popup__btn_disabled');
-	} else {
-		button.classList.remove(`${formData.inactiveButtonClass}`);
+//Закрыть попап нажав на клавишу Escape
+function closePopupPushEsc(evt) {
+	if (evt.key === 'Escape') {
+		const popup = document.querySelector('.popup_active');
+		if (popup.querySelector(`${formData.formSelector}`)) {
+			closePopupWithResetInputs(popup);
+		} else {
+			closePopup(popup);
+		}
 	}
 }
 
+//Закрыть попап нажав на оверлей 
+function closePopupPushOverlay(evt) {
+	if (evt.target.querySelector(`${formData.formSelector}`)) {
+		closePopupWithResetInputs(evt.target);
+	} else {
+		closePopup(evt.target);
+	}
+}
+
+const closePopupWithResetInputs = (popup) => {
+	resetInputs(formData, popup);
+	closePopup(popup);
+};
+
 //Открыть popup изменения профиля
 function openPopupEditProfile() {
-	openPopup(popupEditProfile);
 	inputName.value = profileName.textContent;
 	inputJob.value = profileJob.textContent;
+	openPopup(popupEditProfile);
 }
 
 //Отправить форму изменения профиля
 function sendFormEditProfile(evt) {
 	evt.preventDefault();
-	const newName = inputName.value;
-	const newJob = inputJob.value;
-	profileName.textContent = `${newName}`;
-	profileJob.textContent = `${newJob}`;
+	profileName.textContent = inputName.value;
+	profileJob.textContent = inputJob.value;
 	closePopup(popupEditProfile);
 }
 
@@ -138,7 +130,7 @@ function sendFormAddCard(evt) {
 	evt.preventDefault();
 	const cardElement = createCard({name: inputPlace.value, link: inputLink.value});
 	renderCard(cardElement);
-	closePopup(popupAddCard);
+	closePopupWithResetInputs(popupAddCard);
 	popupFormAddCard.reset();
 }
 
@@ -146,6 +138,6 @@ buttonEditProfile.addEventListener('click', openPopupEditProfile);
 popupFormEditProfile.addEventListener('submit', sendFormEditProfile);
 buttonAddCard.addEventListener('click', () => openPopup(popupAddCard));
 popupFormAddCard.addEventListener('submit', sendFormAddCard);
-buttonCloseEditProfile.addEventListener('click', () => closePopup(popupEditProfile));
-buttonCloseAddCard.addEventListener('click', () => closePopup(popupAddCard));
+buttonCloseEditProfile.addEventListener('click', () => closePopupWithResetInputs(popupEditProfile));
+buttonCloseAddCard.addEventListener('click', () => closePopupWithResetInputs(popupAddCard));
 buttonCloseViewPicture.addEventListener('click', () => closePopup(popupViewPicture));

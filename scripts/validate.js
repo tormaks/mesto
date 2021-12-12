@@ -1,14 +1,5 @@
 'use strict';
 
-const formData = {
-	formSelector: '.popup__form',
-  	inputSelector: '.popup__input',
-  	submitButtonSelector: '.popup__btn',
-  	inactiveButtonClass: 'popup__btn_disabled',
-  	inputErrorClass: 'popup__input_type_error',
-  	errorClass: 'popup__error_visible',
-};
-
 const showInputError = (formData, formElement, inputElement, messageError) => {
 	const inputError = formElement.querySelector(`.${inputElement.id}-error`);
 	inputElement.classList.add(`${formData.inputErrorClass}`);
@@ -36,7 +27,7 @@ const isValid = inputs => {
 	});
 };
 
-const switchStateButton = (formData, inputs, button) => {
+const liveSwitchStateButton = (formData, inputs, button) => {
 	if (isValid(inputs)) {
 		button.classList.add(`${formData.inactiveButtonClass}`);
 	} else {
@@ -44,18 +35,27 @@ const switchStateButton = (formData, inputs, button) => {
 	}
 };
 
+const openSwitchStateButton = (formData, popup) => {
+	const formElement = popup.querySelector(`${formData.formSelector}`);
+	const button = formElement.querySelector(`${formData.submitButtonSelector}`);
+	const inputsList = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
+	if (isValid(inputsList)) {
+		button.classList.add(`${formData.inactiveButtonClass}`);
+	} else {
+		button.classList.remove(`${formData.inactiveButtonClass}`);
+	}
+	inputsList.forEach(inputElement => checkInputValid(formElement, inputElement));
+};
+
 const setEventListeners = (formData, formElement) => {
 	const inputs = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
 
 	const button = formElement.querySelector(`${formData.submitButtonSelector}`);
 
-	if (formElement.getAttribute('name') === 'addCard') {
-		switchStateButton(formData, inputs, button);
-	}
 	inputs.forEach(inputElement => {
-		inputElement.addEventListener('input', (evt) => {
+		inputElement.addEventListener('input', () => {
 			checkInputValid(formElement, inputElement);
-			switchStateButton(formData, inputs, button);
+			liveSwitchStateButton(formData, inputs, button);
 		});
 	});
 };
@@ -66,12 +66,19 @@ const enableValidation = formData => {
 	forms.forEach(formElement => {
 		formElement.addEventListener('submit', (evt) => {
 			evt.preventDefault();
-
 		});
 
 		setEventListeners(formData, formElement);	
 	});
 };
+
+function resetInputs(formData, popup) {
+	const formElement = popup.querySelector(`${formData.formSelector}`);
+	const inputsList = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
+	inputsList.forEach(input => {
+		hideInputError(formData, formElement, input);
+	});
+}
 
 enableValidation(formData);
 
