@@ -1,11 +1,14 @@
 'use strict';
 
+//Показ ошибок валидации
 const showInputError = (formData, formElement, inputElement, messageError) => {
 	const inputError = formElement.querySelector(`.${inputElement.id}-error`);
 	inputElement.classList.add(`${formData.inputErrorClass}`);
 	inputError.classList.add(`${formData.errorClass}`);
 	inputError.textContent = messageError;
 };
+
+//Скрытие ошибок валидации
 const hideInputError = (formData, formElement, inputElement) => {
 	const inputError = formElement.querySelector(`.${inputElement.id}-error`);
 	inputElement.classList.remove(`${formData.inputErrorClass}`);
@@ -13,57 +16,52 @@ const hideInputError = (formData, formElement, inputElement) => {
 	inputError.textContent = '';
 };
 
+//Живая проверка валидности инпута для показа ошибок
 const checkInputValid = (formElement, inputElement) => {
 	if (!inputElement.validity.valid) {
 		showInputError(formData, formElement, inputElement, inputElement.validationMessage);
 	} else {
-		hideInputError(formData ,formElement, inputElement);
+		hideInputError(formData, formElement, inputElement);
 	}
 };
 
-const isValid = inputs => {
-	return inputs.some(input => {
-		return !input.validity.valid;
+//Живая проверка валидности инпутов для переключения кнопки
+const isValid = inputsList => {
+	return inputsList.some(inputElement => {
+		return !inputElement.validity.valid;
 	});
 };
 
-const liveSwitchStateButton = (formData, inputs, button) => {
-	if (isValid(inputs)) {
-		button.classList.add(`${formData.inactiveButtonClass}`);
-	} else {
-		button.classList.remove(`${formData.inactiveButtonClass}`);
-	}
-};
-
-const openSwitchStateButton = (formData, popup) => {
-	const formElement = popup.querySelector(`${formData.formSelector}`);
-	const button = formElement.querySelector(`${formData.submitButtonSelector}`);
-	const inputsList = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
+//Живое переключение состояния кнопки
+const liveSwitchStateButton = (formData, inputsList, buttonElement) => {
 	if (isValid(inputsList)) {
-		button.classList.add(`${formData.inactiveButtonClass}`);
+		buttonElement.classList.add(`${formData.inactiveButtonClass}`);
+		buttonElement.setAttribute('disabled', 'disabled');
 	} else {
-		button.classList.remove(`${formData.inactiveButtonClass}`);
+		buttonElement.classList.remove(`${formData.inactiveButtonClass}`);
+		buttonElement.removeAttribute('disabled');
 	}
-	inputsList.forEach(inputElement => checkInputValid(formElement, inputElement));
 };
 
+//Поиск всех инпутов во всех формах и их живая валидация
 const setEventListeners = (formData, formElement) => {
-	const inputs = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
+	const inputsList = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
 
-	const button = formElement.querySelector(`${formData.submitButtonSelector}`);
+	const buttonElement = formElement.querySelector(`${formData.submitButtonSelector}`);
 
-	inputs.forEach(inputElement => {
+	inputsList.forEach(inputElement => {
 		inputElement.addEventListener('input', () => {
 			checkInputValid(formElement, inputElement);
-			liveSwitchStateButton(formData, inputs, button);
+			liveSwitchStateButton(formData, inputsList, buttonElement);
 		});
 	});
 };
 
+//Поиск всех форм на странице и запуск живой валидации
 const enableValidation = formData => {
-	const forms = Array.from(document.querySelectorAll(`${formData.formSelector}`));
+	const formsList = Array.from(document.querySelectorAll(`${formData.formSelector}`));
 
-	forms.forEach(formElement => {
+	formsList.forEach(formElement => {
 		formElement.addEventListener('submit', (evt) => {
 			evt.preventDefault();
 		});
@@ -72,13 +70,16 @@ const enableValidation = formData => {
 	});
 };
 
-function resetInputs(formData, popup) {
+//Сброс ошибок инпутов
+const resetInputsErrors = (formData, popup) => {
 	const formElement = popup.querySelector(`${formData.formSelector}`);
+	const buttonElement = formElement.querySelector(`${formData.submitButtonSelector}`);
 	const inputsList = Array.from(formElement.querySelectorAll(`${formData.inputSelector}`));
-	inputsList.forEach(input => {
-		hideInputError(formData, formElement, input);
+	inputsList.forEach(inputElement => {
+		hideInputError(formData, formElement, inputElement);
+		liveSwitchStateButton(formData, inputsList, buttonElement);
 	});
-}
+};
 
 enableValidation(formData);
 
