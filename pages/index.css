@@ -28,8 +28,8 @@
 @import url(../blocks/popup/popup.css);
 @import url(../blocks/popup/_active/popup_active.css);
 @import url(../blocks/popup/_type/popup_type_picture.css);
-@import url(../blocks/popup/__picture/popup__picture.css);
-@import url(../blocks/popup/__picture-description/popup__picture-description.css);
+@import url(../blocks/popup/__image/popup__image.css);
+@import url(../blocks/popup/__image-description/popup__image-description.css);
 @import url(../blocks/popup/__close/popup__close.css);
 @import url(../blocks/popup/__close/_type/popup__close_type_picture.css);
 @import url(../blocks/popup/__container/popup__container.css);
