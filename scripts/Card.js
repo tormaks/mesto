@@ -1,6 +1,6 @@
 'use strict';
 
-import { openPopup, closePopup } from "./index.js";
+import { openPopupPicture, closePopupPicture } from "./index.js";
 
 export default class Card {
    constructor(name, link, templateSelector, cardSelector) {
@@ -14,29 +14,19 @@ export default class Card {
       evt.target.classList.toggle('card__like_active');
    }
 
-   _deleteCard(evt) {
-      const cardItem = evt.target.closest(this._cardSelector);
-	   cardItem.remove();
+   _deleteCard() {
+      this._element.remove();
    }
 
    _openPopupPicture() {
-      const popupPicture = document.querySelector('.popup_type_picture');
-      const buttonClosePopupPicture = document.querySelector('.popup__close_type_picture');
-      const popupImage = popupPicture.querySelector('.popup__image');
-      const popupPictureDescription = popupPicture.querySelector('.popup__image-description');
-      popupImage.src = this._link;
-      popupImage.alt = this._name;
-      popupPictureDescription.textContent = this._name;
-      openPopup(popupPicture);
-      buttonClosePopupPicture.addEventListener('click', () => {
-         closePopup(popupPicture);
-      });
+      openPopupPicture(this._name, this._link);
+      closePopupPicture();
    }
 
-   _setEventListeners(cardElement) {
-      cardElement.querySelector('.card__like').addEventListener('click', evt => this._putLike(evt));
-      cardElement.querySelector('.card__trash').addEventListener('click', evt => this._deleteCard(evt));
-      cardElement.querySelector('.card__image').addEventListener('click', () => this._openPopupPicture());
+   _setEventListeners() {
+      this._element.querySelector('.card__like').addEventListener('click', evt => this._putLike(evt));
+      this._element.querySelector('.card__trash').addEventListener('click', () => this._deleteCard());
+      this._elementImage.addEventListener('click', () => this._openPopupPicture());
    }
 
    _getTemplate() {
@@ -49,16 +39,23 @@ export default class Card {
       return cardElement;
    }
 
-   generateCard() {
+   _generateCard() {
       this._element = this._getTemplate();
+      this._elementImage = this._element.querySelector('.card__image');
 
-      this._setEventListeners(this._element);
-         
-      this._element.querySelector('.card__image').src = this._link;
-      this._element.querySelector('.card__image').alt = this._name;
+      this._setEventListeners();
+
+      this._elementImage.src = this._link;
+      this._elementImage.alt = this._name;
       this._element.querySelector('.card__heading').textContent = this._name;
 
-      document.querySelector('.cards__list').prepend(this._element);
+      return this._element;
+   }
+
+   renderCard() {
+      this._newCard = this._generateCard();
+
+      document.querySelector('.cards__list').prepend(this._newCard);
    }
 }
 

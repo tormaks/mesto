@@ -1,6 +1,7 @@
 .card__image {
 	max-width: 282px;
 	max-height: 282px;
+   color: white;
 	width: 100%;
 	flex: 1 1 auto;
 	object-fit: cover;
