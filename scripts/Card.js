@@ -1,6 +1,6 @@
 'use strict';
 
-import { openPopupPicture, closePopupPicture } from "./index.js";
+import { openPopup, popupPicture, popupImage, popupPictureDescription} from "./index.js";
 
 export default class Card {
    constructor(name, link, templateSelector, cardSelector) {
@@ -19,8 +19,10 @@ export default class Card {
    }
 
    _openPopupPicture() {
-      openPopupPicture(this._name, this._link);
-      closePopupPicture();
+      popupImage.src = this._link;
+      popupImage.alt = this._name;
+      popupPictureDescription.textContent = this._name;
+      openPopup(popupPicture);
    }
 
    _setEventListeners() {
@@ -39,7 +41,7 @@ export default class Card {
       return cardElement;
    }
 
-   _generateCard() {
+   generateCard() {
       this._element = this._getTemplate();
       this._elementImage = this._element.querySelector('.card__image');
 
@@ -50,12 +52,6 @@ export default class Card {
       this._element.querySelector('.card__heading').textContent = this._name;
 
       return this._element;
-   }
-
-   renderCard() {
-      this._newCard = this._generateCard();
-
-      document.querySelector('.cards__list').prepend(this._newCard);
    }
 }
 

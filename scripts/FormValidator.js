@@ -41,7 +41,7 @@ export default class FormValidator {
    };
 
    _liveSwitchStateButton = () => {
-      if (this._isValid(this._inputsList)) {
+      if (this._isValid()) {
          this._buttonElement.classList.add(this._inactiveButtonClass);
          this._buttonElement.setAttribute('disabled', 'disabled');
       } else {
@@ -50,19 +50,10 @@ export default class FormValidator {
       }
    };
 
-   _resetInputsErrors = () => {
-      this._inputsList.forEach(inputElement => {
-         this._hideInputError(inputElement);
-         this._liveSwitchStateButton();
-      });
-   };
-
    _setEventListeners() {
       this._inputsList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
 
       this._buttonElement = this._formElement.querySelector(this._submitButtonSelector);
-
-      this._resetInputsErrors();
 
       this._inputsList.forEach(inputElement => {
          inputElement.addEventListener('input', () => {
@@ -71,6 +62,13 @@ export default class FormValidator {
          });
       });
    }
+
+   resetInputsErrors = () => {
+      this._inputsList.forEach(inputElement => {
+         this._hideInputError(inputElement);
+         this._liveSwitchStateButton();
+      });
+   };
 
    enableValidation() {
       this._formElement.addEventListener('submit', evt => {

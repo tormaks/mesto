@@ -34,10 +34,13 @@ const buttonClosePopupPicture = document.querySelector('.popup__close_type_pictu
 const popupImage = popupPicture.querySelector('.popup__image');
 const popupPictureDescription = popupPicture.querySelector('.popup__image-description');
 
+const cardsList = document.querySelector('.cards__list');
+
 //Создание и добавление карточки на страницу
 const renderCard = (name, link) => {
    const cardElement = new Card(name, link, '#card', '.card');
-   cardElement.renderCard(); 
+   const newCard = cardElement.generateCard();
+   cardsList.prepend(newCard);
 }
 
 //Инициализация карточек из массива
@@ -52,7 +55,11 @@ const validationForm = popup => {
    const formElement = popup.querySelector(`${formData.formSelector}`);
    const formValidator = new FormValidator(formData, formElement);
    formValidator.enableValidation();
+   return formValidator;
 }
+
+const editFormValidator = validationForm(popupEditProfile);
+const addFormValidator = validationForm(popupAddCard);
 
 //Открыть попап
 const openPopup = popup => {
@@ -68,17 +75,9 @@ const closePopup = popup => {
 	document.removeEventListener('keydown', closePopupPushEsc);
 };
 
-//Открыть попап просмотра картинки
-const openPopupPicture = (name, link) => {
-	popupImage.src = link;
-   popupImage.alt = name;
-   popupPictureDescription.textContent = name;
-   openPopup(popupPicture);
-};
-
 //Открыть popup добавления карточки
 const openPopupAddCard = () => {
-   validationForm(popupAddCard);
+   addFormValidator.resetInputsErrors();
 	openPopup(popupAddCard);
 };
 
@@ -86,16 +85,9 @@ const openPopupAddCard = () => {
 const openPopupEditProfile = () => {
 	inputName.value = profileName.textContent;
 	inputJob.value = profileJob.textContent;
-   validationForm(popupEditProfile);
+   editFormValidator.resetInputsErrors();
 	openPopup(popupEditProfile);
 };
-
-//Закрыть попап просмотра картинки
-const closePopupPicture = () => {
-   buttonClosePopupPicture.addEventListener('click', () => {
-      closePopup(popupPicture);
-   });
-}
 
 //Закрыть попап нажав на оверлей 
 const closePopupPushOverlay = evt => {
@@ -135,5 +127,6 @@ popupFormEditProfile.addEventListener('submit', sendFormEditProfile);
 popupFormAddCard.addEventListener('submit', sendFormAddCard);
 buttonCloseEditProfile.addEventListener('click', () => closePopup(popupEditProfile));
 buttonCloseAddCard.addEventListener('click', () => closePopup(popupAddCard));
+buttonClosePopupPicture.addEventListener('click', () => closePopup(popupPicture));
 
-export {formData, openPopupPicture, closePopupPicture};
+export {formData, openPopup, popupPicture, popupImage, popupPictureDescription};
