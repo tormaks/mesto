@@ -1,13 +1,10 @@
-'use strict';
-
-import { openPopup, popupPicture, popupImage, popupPictureDescription} from "./index.js";
-
 export default class Card {
-   constructor(name, link, templateSelector, cardSelector) {
+   constructor(name, link, templateSelector, cardSelector, handleCardClick) {
       this._name = name;
       this._link = link;
       this._templateSelector = templateSelector;
       this._cardSelector = cardSelector;
+      this._handleCardClick = handleCardClick;
    }
 
    _putLike(evt) {
@@ -19,10 +16,7 @@ export default class Card {
    }
 
    _openPopupPicture() {
-      popupImage.src = this._link;
-      popupImage.alt = this._name;
-      popupPictureDescription.textContent = this._name;
-      openPopup(popupPicture);
+      this._handleCardClick();
    }
 
    _setEventListeners() {
