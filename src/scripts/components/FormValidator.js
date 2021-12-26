@@ -16,7 +16,6 @@ export default class FormValidator {
       this._inputError.textContent = messageError;
    };
    
-   //Скрытие ошибок валидации
    _hideInputError = (inputElement) => {
       this._inputError = this._formElement.querySelector(`.${inputElement.id}-error`);
       inputElement.classList.remove(this._inputErrorClass);

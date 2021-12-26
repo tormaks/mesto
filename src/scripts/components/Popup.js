@@ -1,6 +1,8 @@
 export default class Popup {
    constructor (popupSelector) {
       this._popupSelector = document.querySelector(popupSelector);
+      this._handleEscClose = this._handleEscClose.bind(this);
+      this._pushOverlayClose = this._pushOverlayClose.bind(this);
    }
 
    open() {
@@ -27,8 +29,6 @@ export default class Popup {
    }
 
    setEventListeners() {
-      this._handleEscClose = this._handleEscClose.bind(this); //Поле для удаления слушателя события
-      this._pushOverlayClose = this._pushOverlayClose.bind(this); //Поле для удаления слушателя события
       this._popupSelector.querySelector('.popup__close').addEventListener('click', this.close.bind(this));
       this._popupSelector.addEventListener('click', this._pushOverlayClose);
       document.addEventListener('keydown', this._handleEscClose);
