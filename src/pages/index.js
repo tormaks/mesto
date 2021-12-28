@@ -1,7 +1,7 @@
 'use strict';
 
 import './index.css';
-import { buttonEditProfile, inputName, inputJob, buttonAddCard, popupImage, popupPictureDescription, cardsContainerSelector} from '../scripts/utils/constants.js';
+import { buttonEditProfile, inputName, inputJob, buttonAddCard, cardsContainerSelector} from '../scripts/utils/constants.js';
 
 import { initialCards } from "../scripts/utils/initialCards.js";
 import { formData } from "../scripts/utils/formData.js";
@@ -12,19 +12,28 @@ import PopupWithImage from "../scripts/components/PopupWithImage.js";
 import PopupWithForm from "../scripts/components/PopupWithForm.js";
 import UserInfo from "../scripts/components/UserInfo.js";
 
+const createPopupPicture = (name, link) => {
+   const popupPicture = new PopupWithImage('.popup_type_picture');
+   popupPicture.open(name, link);
+   popupPicture.setEventListeners();
+}
+
 const createCard = (name, link) => {
    const cardElement = new Card(name, link, '#card', '.card', () => {
-      const popupPicture = new PopupWithImage('.popup_type_picture', name, link, popupImage, popupPictureDescription);
-      popupPicture.open();
+      createPopupPicture(name, link);
    });
-   const newCard = cardElement.generateCard();
+   return cardElement.generateCard();
+}
+
+const addCard = (name, link) => {
+   const newCard = createCard(name, link);
    cardsList.addItem(newCard);
 }
 
 const cardsList = new Section({
    items: initialCards,
    renderer: item => {
-      createCard(item.name, item.link);
+      addCard(item.name, item.link);
    }
 }, cardsContainerSelector);
 
@@ -45,7 +54,7 @@ const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formV
 const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues, evt) {
    evt.preventDefault();
    const { place, link } = formValues;
-   createCard(place, link);
+   addCard(place, link);
    popupAddCard.close();
 })
 
@@ -62,6 +71,7 @@ const popupAddCardFormValidator = validationForm(document.querySelector('.popup_
 const openPopupAddCard = () => {
    popupAddCardFormValidator.resetInputsErrors();
    popupAddCard.open();
+   popupAddCard.setEventListeners();
 };
 
 const openPopupEditProfile = () => {
@@ -70,6 +80,7 @@ const openPopupEditProfile = () => {
    inputJob.value = job;
    popupEditFormValidator.resetInputsErrors();
    popupEditProfile.open();
+   popupEditProfile.setEventListeners();
 };
 
 buttonEditProfile.addEventListener('click', openPopupEditProfile);
