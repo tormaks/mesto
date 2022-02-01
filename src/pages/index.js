@@ -27,9 +27,13 @@ const userInfo = new UserInfo({
    avatarSelector: '.profile__image',
 });
 
-api.getUserName()
+const updateUser = () => {
+   api.getUserName()
    .then(({name, about, avatar}) => userInfo.setUserInfo(name, about, avatar))
    .catch(err => console.log(err));
+}
+
+updateUser();
 
 const createPopupPicture = (name, link) => {
    const popupPicture = new PopupWithImage('.popup_type_picture');
@@ -61,7 +65,7 @@ cardsList.renderItems();
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
    const { name, job } = formValues;
-   userInfo.setUserInfo(name, job);
+   api.setUserName(name, job).then(updateUser()).catch(err => console.log(err));
    popupEditProfile.close();
 });
 
