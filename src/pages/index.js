@@ -11,6 +11,25 @@ import Section from "../scripts/components/Section.js";
 import PopupWithImage from "../scripts/components/PopupWithImage.js";
 import PopupWithForm from "../scripts/components/PopupWithForm.js";
 import UserInfo from "../scripts/components/UserInfo.js";
+import Api from "../scripts/components/Api.js"
+
+const api = new Api({
+   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-35',
+   headers: {
+      authorization: 'ba215110-62f5-4bce-89bc-aab13847df95',
+      'Content-Type': 'application/json'
+   }
+});
+
+const userInfo = new UserInfo({
+   nameSelector: '.profile__name',
+   jobSelector: '.profile__job',
+   avatarSelector: '.profile__image',
+});
+
+api.getUserName()
+   .then(({name, about, avatar}) => userInfo.setUserInfo(name, about, avatar))
+   .catch(err => console.log(err));
 
 const createPopupPicture = (name, link) => {
    const popupPicture = new PopupWithImage('.popup_type_picture');
@@ -38,11 +57,6 @@ const cardsList = new Section({
 }, cardsContainerSelector);
 
 cardsList.renderItems();
-
-const userInfo = new UserInfo({
-   nameSelector: '.profile__name',
-   jobSelector: '.profile__job',
-});
 
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
