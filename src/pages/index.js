@@ -19,21 +19,17 @@ const api = new Api({
    }
 });
 
-api.getUserName();
-
 const userInfo = new UserInfo({
    nameSelector: '.profile__name',
    jobSelector: '.profile__job',
    avatarSelector: '.profile__image',
 });
 
-const updateUser = () => {
+(function updateUser() {
    api.getUserName()
    .then(({name, about, avatar}) => userInfo.setUserInfo(name, about, avatar))
    .catch(err => console.log(err));
-}
-
-updateUser();
+}())
 
 const createPopupPicture = (name, link) => {
    const popupPicture = new PopupWithImage('.popup_type_picture');
@@ -41,39 +37,51 @@ const createPopupPicture = (name, link) => {
    popupPicture.setEventListeners();
 }
 
-const createCard = (name, link) => {
-   const cardElement = new Card(name, link, '#card', '.card', () => {
+const createCard = (name, link, cardId) => {
+   const cardElement = new Card(name, link, '#card', '.card', cardId, () => {
       createPopupPicture(name, link);
    });
    return cardElement.generateCard();
 }
 
-const addCard = (name, link) => {
-   const newCard = createCard(name, link);
+const addCard = (name, link, userId, cardId) => {
+   const newCard = createCard(name, link, cardId);
+   const buttonDelete = newCard.querySelector('.card__trash');
+   if (userId !== '58b594a40c7b10a97241123a') {
+      buttonDelete.remove();
+   }
    document.querySelector(cardsContainerSelector).prepend(newCard);
 }
 
-const updateCards = () => {
+(function updateCards() {
    api.getCards().then(data => {
-      data.forEach(({name, link}) => {
-         addCard(name, link);
+      const array = data.reverse();
+      console.log(array);
+      array.forEach(item => {
+         addCard(item.name, item.link, item.owner._id, item._id);
       })
    });
-}
-
-updateCards();
+}());
 
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
    const { name, job } = formValues;
-   api.setUserName(name, job).then(updateUser()).catch(err => console.log(err));
+   api.setUserName(name, job)
+      .then(data => {
+         userInfo.setUserInfo(data.name, data.about, data.avatar);
+      })
+      .catch(err => console.log(err));
    popupEditProfile.close();
 });
 
 const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues, evt) {
    evt.preventDefault();
    const { place, link } = formValues;
-   api.addNewCard(place, link).then(addCard(place, link)).catch(err => console.log(err));
+   api.addNewCard(place, link)
+      .then(data => {
+         addCard(place, link, data.owner._id, data._id);
+      })
+      .catch(err => console.log(err));
    popupAddCard.close();
 })
 
@@ -104,3 +112,5 @@ const openPopupEditProfile = () => {
 
 buttonEditProfile.addEventListener('click', openPopupEditProfile);
 buttonAddCard.addEventListener('click', openPopupAddCard);
+
+export default api;

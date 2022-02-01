@@ -59,6 +59,22 @@ class Api {
       )
    }
 
+   deleteCard(cardId) {
+      return (
+         fetch(`${this.baseUrl}/cards/${cardId}`, {
+            method: 'DELETE',
+            headers: this.headers,
+         }).then(res => {
+   
+            if (res.ok) {
+               return res.json();
+            } else {
+               return Promise.reject(`Ошибка: ${res.status}`);
+            }
+         })
+      )
+   }
+
    getCards() {
       return (
          fetch(`${this.baseUrl}/cards`, {

@@ -1,9 +1,12 @@
+import api from '../../pages/index.js';
+
 export default class Card {
-   constructor(name, link, templateSelector, cardSelector, handleCardClick) {
+   constructor(name, link, templateSelector, cardSelector, cardId, handleCardClick) {
       this._name = name;
       this._link = link;
       this._templateSelector = templateSelector;
       this._cardSelector = cardSelector;
+      this._cardId = cardId;
       this._handleCardClick = handleCardClick;
    }
 
@@ -11,8 +14,9 @@ export default class Card {
       evt.target.classList.toggle('card__like_active');
    }
 
-   _deleteCard() {
-      this._element.remove();
+   _deleteCard(evt) {
+      evt.target.closest('.card').remove();
+      api.deleteCard(this._cardId).then(data => console.log(data));
    }
 
    _openPopupPicture() {
@@ -21,7 +25,7 @@ export default class Card {
 
    _setEventListeners() {
       this._element.querySelector('.card__like').addEventListener('click', evt => this._putLike(evt));
-      this._element.querySelector('.card__trash').addEventListener('click', () => this._deleteCard());
+      this._element.querySelector('.card__trash').addEventListener('click', evt => this._deleteCard(evt));
       this._elementImage.addEventListener('click', () => this._openPopupPicture());
    }
 
