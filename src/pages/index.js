@@ -3,11 +3,9 @@
 import './index.css';
 import { buttonEditProfile, inputName, inputJob, buttonAddCard, cardsContainerSelector} from '../scripts/utils/constants.js';
 
-import { initialCards } from "../scripts/utils/initialCards.js";
 import { formData } from "../scripts/utils/formData.js";
 import Card from "../scripts/components/Card.js";
 import FormValidator from "../scripts/components/FormValidator.js";
-import Section from "../scripts/components/Section.js";
 import PopupWithImage from "../scripts/components/PopupWithImage.js";
 import PopupWithForm from "../scripts/components/PopupWithForm.js";
 import UserInfo from "../scripts/components/UserInfo.js";
@@ -20,6 +18,8 @@ const api = new Api({
       'Content-Type': 'application/json'
    }
 });
+
+api.getUserName();
 
 const userInfo = new UserInfo({
    nameSelector: '.profile__name',
@@ -50,17 +50,18 @@ const createCard = (name, link) => {
 
 const addCard = (name, link) => {
    const newCard = createCard(name, link);
-   cardsList.addItem(newCard);
+   document.querySelector(cardsContainerSelector).prepend(newCard);
 }
 
-const cardsList = new Section({
-   items: initialCards,
-   renderer: item => {
-      addCard(item.name, item.link);
-   }
-}, cardsContainerSelector);
+const updateCards = () => {
+   api.getCards().then(data => {
+      data.forEach(({name, link}) => {
+         addCard(name, link);
+      })
+   });
+}
 
-cardsList.renderItems();
+updateCards();
 
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
@@ -72,7 +73,7 @@ const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formV
 const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues, evt) {
    evt.preventDefault();
    const { place, link } = formValues;
-   addCard(place, link);
+   api.addNewCard(place, link).then(addCard(place, link)).catch(err => console.log(err));
    popupAddCard.close();
 })
 
