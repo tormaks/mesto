@@ -4,6 +4,7 @@ export default class PopupWithForm extends Popup {
    constructor(popupSelector, submitForm) {
       super(popupSelector);
       this._submitForm = submitForm;
+      this._btnSubmit = this._popupSelector.querySelector('.popup__btn');
    }
 
    _getInputValues() {
@@ -15,11 +16,24 @@ export default class PopupWithForm extends Popup {
       return this._formValues;
    }
 
+   loadingStart() {
+      this._initialName = this._btnSubmit.textContent;
+      this._btnSubmit.setAttribute('disabled', 'disabled');
+      this._btnSubmit.textContent = 'Сохранение...';
+   }
+
+   loadingEnd() {
+      this._btnSubmit.textContent = this._initialName;
+      console.log(this._initialName);
+   }
+
+   _formSubmission = (evt) => {
+      this._submitForm(this._getInputValues(), evt);
+   }
+
    setEventListeners() {
       super.setEventListeners();
-      this._popupSelector.querySelector('.popup__form').addEventListener('submit', evt => {
-         this._submitForm(this._getInputValues(), evt);
-      });  
+      this._popupSelector.querySelector('.popup__form').addEventListener('submit', this._formSubmission); 
    }
 
    close() {

@@ -1,13 +1,13 @@
 class Api {
    constructor(options) {
-      this.baseUrl = options.baseUrl;
-      this.headers = options.headers;
+      this._baseUrl = options.baseUrl;
+      this._headers = options.headers;
    }
 
    getUserName() {
       return (
-         fetch(`${this.baseUrl}/users/me`, {
-            headers: this.headers,
+         fetch(`${this._baseUrl}/users/me`, {
+            headers: this._headers,
          }).then(res => {
    
             if (res.ok) {
@@ -21,9 +21,9 @@ class Api {
 
    setUserData(userData, avatarUrl) {
       return (
-         fetch(`${this.baseUrl}/users/me${avatarUrl ? avatarUrl : ''}`, {
+         fetch(`${this._baseUrl}/users/me${avatarUrl ? avatarUrl : ''}`, {
             method: 'PATCH',
-            headers: this.headers,
+            headers: this._headers,
             body: JSON.stringify(userData)
          }).then(res => {
    
@@ -36,30 +36,11 @@ class Api {
       )
    }
 
-   // setUserAvatar(avatar) {
-   //    return (
-   //       fetch(`${this.baseUrl}/users/me/avatar`, {
-   //          method: 'PATCH',
-   //          headers: this.headers,
-   //          body: JSON.stringify({
-   //             avatar,
-   //          })
-   //       }).then(res => {
-   
-   //          if (res.ok) {
-   //             return res.json();
-   //          } else {
-   //             return Promise.reject(`Ошибка: ${res.status}`);
-   //          }
-   //       })
-   //    )
-   // }
-
    addNewCard(name, link) {
       return (
-         fetch(`${this.baseUrl}/cards`, {
+         fetch(`${this._baseUrl}/cards`, {
             method: 'POST',
-            headers: this.headers,
+            headers: this._headers,
             body: JSON.stringify({
                name,
                link,
@@ -77,9 +58,9 @@ class Api {
 
    deleteCard(cardId) {
       return (
-         fetch(`${this.baseUrl}/cards/${cardId}`, {
+         fetch(`${this._baseUrl}/cards/${cardId}`, {
             method: 'DELETE',
-            headers: this.headers,
+            headers: this._headers,
          }).then(res => {
    
             if (res.ok) {
@@ -93,8 +74,8 @@ class Api {
 
    getCards() {
       return (
-         fetch(`${this.baseUrl}/cards`, {
-            headers: this.headers,
+         fetch(`${this._baseUrl}/cards`, {
+            headers: this._headers,
          }).then(res => {
    
             if (res.ok) {
@@ -108,9 +89,9 @@ class Api {
 
    toggleLikeCard(cardId, method) {
       return (
-         fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+         fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
             method,
-            headers: this.headers,
+            headers: this._headers,
          }).then(res => {
    
             if (res.ok) {

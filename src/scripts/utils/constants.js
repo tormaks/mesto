@@ -5,5 +5,4 @@ const cardsContainerSelector = '.cards__list',
       buttonAddCard = document.querySelector('.profile__add-button'),
       buttonUpdateAvatar = document.querySelector('.profile__image');
 
-
 export {buttonEditProfile, inputName, inputJob, buttonUpdateAvatar, buttonAddCard, cardsContainerSelector};

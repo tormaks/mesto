@@ -10,13 +10,13 @@
 }
 
 @media screen and (max-width: 535px) {
-	.popup__btn {
+	.popup__btn_disabled {
 		padding: 9px 99px;
 	}
 }
 
 @media screen and (max-width: 425px) {
-	.popup__btn {
+	.popup__btn_disabled {
 		font-size: 14px;
 		line-height: 16.94px;
 		padding: 13px 81px;

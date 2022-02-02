@@ -88,33 +88,39 @@ const addCard = (name, link, userId, cardId, likes) => {
 
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
+   popupEditProfile.loadingStart();
    const { name, job } = formValues;
    api.setUserData({name, about: job})
       .then(data => {
          userInfo.setUserInfo(data.name, data.about);
          popupEditProfile.close();
+         popupEditProfile.loadingEnd();
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
 });
 
 const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues, evt) {
    evt.preventDefault();
+   popupAddCard.loadingStart();
    const { place, link } = formValues;
    api.addNewCard(place, link)
       .then(data => {
          addCard(place, link, data.owner._id, data._id, data.likes);
          popupAddCard.close();
+         popupAddCard.loadingEnd();
       })
       .catch(err => console.log(err));
 })
 
 const popupUpdateAvatar = new PopupWithForm('.popup_type_update-avatar', function(formValues, evt) {
    evt.preventDefault();
+   popupUpdateAvatar.loadingStart();
    const { avatar } = formValues;
    api.setUserData({avatar}, '/avatar')
       .then(data => {
          userInfo.setUserAvatar(data.avatar);
          popupUpdateAvatar.close();
+         popupUpdateAvatar.loadingEnd();
       })
       .catch(err => console.log(err));
 })

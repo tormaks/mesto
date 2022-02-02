@@ -4,8 +4,10 @@
   "description": "---\r ## Описание: \r #### Сервис Mesto. Интерактивная страница, куда можно добавлять места с фотографией и названием, удалять их и добавлять в избранное. Также присутствует возможность просматривать фотографии более подробно.\r ---\r ## Стек используемых технологий:\r * ##### _HTML5_\r * ##### _CSS3_\r * ##### _JavaScript_\r * ##### _Git_\r * ##### _BEM_\r * ##### _Адаптивность и кроссбраузерность_\r * ##### _Семантика и валидность html разметки_",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack serve"
+      "predeploy": "npm run build",
+      "deploy": "gh-pages -d dist",
+      "build": "webpack --mode production",
+      "dev": "webpack serve"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
     "webpack-dev-server": "^4.7.1"
   },
   "dependencies": {
-    "core-js": "^3.20.1"
+    "core-js": "^3.20.1",
+    "gh-pages": "^3.2.3"
   }
 }
