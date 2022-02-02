@@ -1,7 +1,7 @@
 'use strict';
 
 import './index.css';
-import { buttonEditProfile, inputName, inputJob, buttonAddCard, cardsContainerSelector} from '../scripts/utils/constants.js';
+import { buttonEditProfile, buttonUpdateAvatar, inputName, inputJob, buttonAddCard, cardsContainerSelector} from '../scripts/utils/constants.js';
 
 import { formData } from "../scripts/utils/formData.js";
 import Card from "../scripts/components/Card.js";
@@ -23,12 +23,15 @@ const api = new Api({
 const userInfo = new UserInfo({
    nameSelector: '.profile__name',
    jobSelector: '.profile__job',
-   avatarSelector: '.profile__image',
+   avatarSelector: '.profile__avatar',
 });
 
 (function updateUser() {
    api.getUserName()
-   .then(({name, about, avatar}) => userInfo.setUserInfo(name, about, avatar))
+   .then(({name, about, avatar}) => {
+      userInfo.setUserInfo(name, about);
+      userInfo.setUserAvatar(avatar);
+   })
    .catch(err => console.log(err));
 }())
 
@@ -86,12 +89,12 @@ const addCard = (name, link, userId, cardId, likes) => {
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
    const { name, job } = formValues;
-   api.setUserName(name, job)
+   api.setUserData({name, about: job})
       .then(data => {
-         userInfo.setUserInfo(data.name, data.about, data.avatar);
+         userInfo.setUserInfo(data.name, data.about);
+         popupEditProfile.close();
       })
       .catch(err => console.log(err));
-   popupEditProfile.close();
 });
 
 const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues, evt) {
@@ -100,9 +103,20 @@ const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues,
    api.addNewCard(place, link)
       .then(data => {
          addCard(place, link, data.owner._id, data._id, data.likes);
+         popupAddCard.close();
       })
       .catch(err => console.log(err));
-   popupAddCard.close();
+})
+
+const popupUpdateAvatar = new PopupWithForm('.popup_type_update-avatar', function(formValues, evt) {
+   evt.preventDefault();
+   const { avatar } = formValues;
+   api.setUserData({avatar}, '/avatar')
+      .then(data => {
+         userInfo.setUserAvatar(data.avatar);
+         popupUpdateAvatar.close();
+      })
+      .catch(err => console.log(err));
 })
 
 const validationForm = popup => {
@@ -114,12 +128,7 @@ const validationForm = popup => {
 
 const popupEditFormValidator = validationForm(document.querySelector('.popup_type_profile'));
 const popupAddCardFormValidator = validationForm(document.querySelector('.popup_type_place'));
-
-const openPopupAddCard = () => {
-   popupAddCardFormValidator.resetInputsErrors();
-   popupAddCard.open();
-   popupAddCard.setEventListeners();
-};
+const popupUpdateAvatarFormValidator = validationForm(document.querySelector('.popup_type_update-avatar'));
 
 const openPopupEditProfile = () => {
    const {name, job} = userInfo.getUserInfo();
@@ -130,7 +139,20 @@ const openPopupEditProfile = () => {
    popupEditProfile.setEventListeners();
 };
 
+const openPopupAddCard = () => {
+   popupAddCardFormValidator.resetInputsErrors();
+   popupAddCard.open();
+   popupAddCard.setEventListeners();
+};
+
+const openPopupUpdateAvatar = () => {
+   popupUpdateAvatarFormValidator.resetInputsErrors();
+   popupUpdateAvatar.open();
+   popupUpdateAvatar.setEventListeners();
+}
+
 buttonEditProfile.addEventListener('click', openPopupEditProfile);
 buttonAddCard.addEventListener('click', openPopupAddCard);
+buttonUpdateAvatar.addEventListener('click', openPopupUpdateAvatar);
 
 export default api;

@@ -13,7 +13,9 @@
 		</header>
 		<main class="content">
 			<section class="profile">
-				<img src="" alt="Аватар" class="profile__image">
+            <div class="profile__image">
+               <img src="" alt="Аватар" class="profile__avatar">
+            </div>
 				<div class="profile__info">
 					<div class="profile__wrapper">
 						<h1 class="profile__name"></h1>
@@ -71,11 +73,14 @@
             <button type="button" class="popup__close popup__close_type_confirm-delete-card" aria-label="Закрыть"></button>
          </div>
       </div>
-      <div class="popup popup_type_update-avatar popup_active">
+      <div class="popup popup_type_update-avatar">
          <div class="popup__container">
-            <h2 class="popup__title popup__title_type_update-avatar">Обновить аватар</h2>
-            <input id="input-avatar-link" type="url" required placeholder="Ссылка на аватар" name="avatar-link" class="popup__input popup__input_value_avatar-link">
-            <button type="submit" class="popup__btn popup__btn_type_update-avatar" aria-label="Сохранить">Сохранить</button>
+            <form action="#" class="popup__form" name="updateAvatar" novalidate>
+               <h2 class="popup__title popup__title_type_update-avatar">Обновить аватар</h2>
+               <input id="input-avatar-link" type="url" required placeholder="Ссылка на аватар" name="avatar" class="popup__input popup__input_value_avatar-link">
+               <span class="input-avatar-link-error popup__error"></span>
+               <button type="submit" class="popup__btn popup__btn_type_update-avatar" aria-label="Сохранить">Сохранить</button>
+            </form>
             <button type="button" class="popup__close popup__close_type_update-avatar" aria-label="Закрыть"></button>
          </div>
       </div>

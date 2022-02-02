@@ -19,15 +19,12 @@ class Api {
       )
    }
 
-   setUserName(name, about) {
+   setUserData(userData, avatarUrl) {
       return (
-         fetch(`${this.baseUrl}/users/me`, {
+         fetch(`${this.baseUrl}/users/me${avatarUrl ? avatarUrl : ''}`, {
             method: 'PATCH',
             headers: this.headers,
-            body: JSON.stringify({
-               name,
-               about,
-            })
+            body: JSON.stringify(userData)
          }).then(res => {
    
             if (res.ok) {
@@ -38,6 +35,25 @@ class Api {
          })
       )
    }
+
+   // setUserAvatar(avatar) {
+   //    return (
+   //       fetch(`${this.baseUrl}/users/me/avatar`, {
+   //          method: 'PATCH',
+   //          headers: this.headers,
+   //          body: JSON.stringify({
+   //             avatar,
+   //          })
+   //       }).then(res => {
+   
+   //          if (res.ok) {
+   //             return res.json();
+   //          } else {
+   //             return Promise.reject(`Ошибка: ${res.status}`);
+   //          }
+   //       })
+   //    )
+   // }
 
    addNewCard(name, link) {
       return (

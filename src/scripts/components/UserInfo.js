@@ -14,9 +14,12 @@ export default class UserInfo {
       }
    }
 
-   setUserInfo(newName, newJob, newAvatar = 'https://pictures.s3.yandex.net/frontend-developer/common/ava.jpg') {
+   setUserInfo(newName, newJob) {
       this._nameSelector.textContent = newName;
       this._jobSelector.textContent = newJob;
+   }
+
+   setUserAvatar(newAvatar) {
       this._avatarSelector.src = newAvatar;
    }
 }
