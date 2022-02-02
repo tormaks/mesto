@@ -45,8 +45,8 @@ const createPopupConfirmDeleteCard = () => {
    return popupConfirmDeleteCard;
 }
 
-const createCard = (name, link, cardId) => {
-   const cardElement = new Card(name, link, '#card', '.card', cardId, 
+const createCard = (name, link, cardId, userId) => {
+   const cardElement = new Card(name, link, '#card', '.card', cardId, userId,
       () => {
          createPopupPicture(name, link);
    }, () => {
@@ -57,10 +57,16 @@ const createCard = (name, link, cardId) => {
 }
 
 const addCard = (name, link, userId, cardId, likes) => {
-   const newCard = createCard(name, link, cardId);
+   const newCard = createCard(name, link, cardId, userId);
    const buttonDelete = newCard.querySelector('.card__trash');
    const numberLikes = newCard.querySelector('.card__number-likes');
-   numberLikes.textContent = likes;
+   const buttonLike = newCard.querySelector('.card__like');
+   likes.forEach(like => {
+      if (like._id === '58b594a40c7b10a97241123a') {
+         buttonLike.classList.add('card__like_active');
+      }
+   })
+   numberLikes.textContent = likes.length;
    if (userId !== '58b594a40c7b10a97241123a') {
       buttonDelete.remove();
    }
@@ -72,7 +78,7 @@ const addCard = (name, link, userId, cardId, likes) => {
       const array = data.reverse();
       console.log(array);
       array.forEach(item => {
-         addCard(item.name, item.link, item.owner._id, item._id, item.likes.length);
+         addCard(item.name, item.link, item.owner._id, item._id, item.likes);
       })
    });
 }());
@@ -93,7 +99,7 @@ const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues,
    const { place, link } = formValues;
    api.addNewCard(place, link)
       .then(data => {
-         addCard(place, link, data.owner._id, data._id, data.likes.length);
+         addCard(place, link, data.owner._id, data._id, data.likes);
       })
       .catch(err => console.log(err));
    popupAddCard.close();

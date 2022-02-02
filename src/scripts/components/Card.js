@@ -1,18 +1,31 @@
 import api from '../../pages/index.js';
 
 export default class Card {
-   constructor(name, link, templateSelector, cardSelector, cardId, handleCardClick, deleteCardClick) {
+   constructor(name, link, templateSelector, cardSelector, cardId, userId, handleCardClick, deleteCardClick) {
       this._name = name;
       this._link = link;
       this._templateSelector = templateSelector;
       this._cardSelector = cardSelector;
       this._cardId = cardId;
+      this._userId = userId;
       this._handleCardClick = handleCardClick;
       this._deleteCardClick = deleteCardClick;
    }
 
-   _putLike(evt) {
-      evt.target.classList.toggle('card__like_active');
+   _toggleLike(evt) {
+      if (evt.target.classList.contains('card__like_active')) {
+         api.toggleLikeCard(this._cardId, 'DELETE').then(data => {
+            evt.target.classList.remove('card__like_active');
+            evt.target.nextElementSibling.textContent = data.likes.length;
+            console.log(data);
+         })
+      } else {
+         api.toggleLikeCard(this._cardId, 'PUT').then(data => {
+            evt.target.classList.add('card__like_active');
+            evt.target.nextElementSibling.textContent = data.likes.length;
+            console.log(data);
+         })
+      }
    }
 
    _deleteCard(evt) {
@@ -33,7 +46,7 @@ export default class Card {
    }
 
    _setEventListeners() {
-      this._element.querySelector('.card__like').addEventListener('click', evt => this._putLike(evt));
+      this._element.querySelector('.card__like').addEventListener('click', evt => this._toggleLike(evt));
       this._element.querySelector('.card__trash').addEventListener('click', evt => this._openPopupConfirmDeleteCard(evt));
       this._elementImage.addEventListener('click', () => this._openPopupPicture());
    }

@@ -90,7 +90,21 @@ class Api {
       )
    }
 
+   toggleLikeCard(cardId, method) {
+      return (
+         fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+            method,
+            headers: this.headers,
+         }).then(res => {
    
+            if (res.ok) {
+               return res.json();
+            } else {
+               return Promise.reject(`Ошибка: ${res.status}`);
+            }
+         })
+      )
+   }
 }
 
 export default Api;
