@@ -44,9 +44,11 @@ const createCard = (name, link, cardId) => {
    return cardElement.generateCard();
 }
 
-const addCard = (name, link, userId, cardId) => {
+const addCard = (name, link, userId, cardId, likes) => {
    const newCard = createCard(name, link, cardId);
    const buttonDelete = newCard.querySelector('.card__trash');
+   const numberLikes = newCard.querySelector('.card__number-likes');
+   numberLikes.textContent = likes;
    if (userId !== '58b594a40c7b10a97241123a') {
       buttonDelete.remove();
    }
@@ -58,7 +60,7 @@ const addCard = (name, link, userId, cardId) => {
       const array = data.reverse();
       console.log(array);
       array.forEach(item => {
-         addCard(item.name, item.link, item.owner._id, item._id);
+         addCard(item.name, item.link, item.owner._id, item._id, item.likes.length);
       })
    });
 }());
@@ -79,7 +81,7 @@ const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues,
    const { place, link } = formValues;
    api.addNewCard(place, link)
       .then(data => {
-         addCard(place, link, data.owner._id, data._id);
+         addCard(place, link, data.owner._id, data._id, data.likes.length);
       })
       .catch(err => console.log(err));
    popupAddCard.close();
