@@ -6,6 +6,7 @@ import { buttonEditProfile, inputName, inputJob, buttonAddCard, cardsContainerSe
 import { formData } from "../scripts/utils/formData.js";
 import Card from "../scripts/components/Card.js";
 import FormValidator from "../scripts/components/FormValidator.js";
+import Popup from '../scripts/components/Popup.js';
 import PopupWithImage from "../scripts/components/PopupWithImage.js";
 import PopupWithForm from "../scripts/components/PopupWithForm.js";
 import UserInfo from "../scripts/components/UserInfo.js";
@@ -37,9 +38,20 @@ const createPopupPicture = (name, link) => {
    popupPicture.setEventListeners();
 }
 
+const createPopupConfirmDeleteCard = () => {
+   const popupConfirmDeleteCard = new Popup('.popup_type_confirm-delete-card');
+   popupConfirmDeleteCard.open();
+   popupConfirmDeleteCard.setEventListeners();
+   return popupConfirmDeleteCard;
+}
+
 const createCard = (name, link, cardId) => {
-   const cardElement = new Card(name, link, '#card', '.card', cardId, () => {
-      createPopupPicture(name, link);
+   const cardElement = new Card(name, link, '#card', '.card', cardId, 
+      () => {
+         createPopupPicture(name, link);
+   }, () => {
+      const popupConfirmDeleteCard = createPopupConfirmDeleteCard();
+      return popupConfirmDeleteCard;
    });
    return cardElement.generateCard();
 }

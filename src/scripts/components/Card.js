@@ -1,13 +1,14 @@
 import api from '../../pages/index.js';
 
 export default class Card {
-   constructor(name, link, templateSelector, cardSelector, cardId, handleCardClick) {
+   constructor(name, link, templateSelector, cardSelector, cardId, handleCardClick, deleteCardClick) {
       this._name = name;
       this._link = link;
       this._templateSelector = templateSelector;
       this._cardSelector = cardSelector;
       this._cardId = cardId;
       this._handleCardClick = handleCardClick;
+      this._deleteCardClick = deleteCardClick;
    }
 
    _putLike(evt) {
@@ -19,13 +20,21 @@ export default class Card {
       api.deleteCard(this._cardId).then(data => console.log(data));
    }
 
+   _openPopupConfirmDeleteCard(evt) {
+      const popupConfirmDeleteCard = this._deleteCardClick();
+      document.querySelector('.popup__btn_type_confirm-delete-card').addEventListener('click', () => {
+         this._deleteCard(evt);
+         popupConfirmDeleteCard.close();
+      });
+   }
+
    _openPopupPicture() {
       this._handleCardClick();
    }
 
    _setEventListeners() {
       this._element.querySelector('.card__like').addEventListener('click', evt => this._putLike(evt));
-      this._element.querySelector('.card__trash').addEventListener('click', evt => this._deleteCard(evt));
+      this._element.querySelector('.card__trash').addEventListener('click', evt => this._openPopupConfirmDeleteCard(evt));
       this._elementImage.addEventListener('click', () => this._openPopupPicture());
    }
 
