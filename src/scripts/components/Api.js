@@ -4,18 +4,19 @@ class Api {
       this._headers = options.headers;
    }
 
+   _checkResponse(res) {
+      if (res.ok) {
+         return res.json();
+      }
+
+      return Promise.reject(`Ошибка: ${res.status}`);
+   }
+
    getUserName() {
       return (
          fetch(`${this._baseUrl}/users/me`, {
             headers: this._headers,
-         }).then(res => {
-   
-            if (res.ok) {
-               return res.json();
-            }
-            
-            return Promise.reject(`Ошибка: ${res.status}`);
-         })
+         }).then(this._checkResponse)
       )
    }
 
@@ -25,14 +26,7 @@ class Api {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify(userData)
-         }).then(res => {
-   
-            if (res.ok) {
-               return res.json();
-            } else {
-               return Promise.reject(`Ошибка: ${res.status}`);
-            }
-         })
+         }).then(this._checkResponse)
       )
    }
 
@@ -45,14 +39,7 @@ class Api {
                name,
                link,
             })
-         }).then(res => {
-   
-            if (res.ok) {
-               return res.json();
-            } else {
-               return Promise.reject(`Ошибка: ${res.status}`);
-            }
-         })
+         }).then(this._checkResponse)
       )
    }
 
@@ -61,14 +48,7 @@ class Api {
          fetch(`${this._baseUrl}/cards/${cardId}`, {
             method: 'DELETE',
             headers: this._headers,
-         }).then(res => {
-   
-            if (res.ok) {
-               return res.json();
-            } else {
-               return Promise.reject(`Ошибка: ${res.status}`);
-            }
-         })
+         }).then(this._checkResponse)
       )
    }
 
@@ -76,14 +56,7 @@ class Api {
       return (
          fetch(`${this._baseUrl}/cards`, {
             headers: this._headers,
-         }).then(res => {
-   
-            if (res.ok) {
-               return res.json();
-            } else {
-               return Promise.reject(`Ошибка: ${res.status}`);
-            }
-         })
+         }).then(this._checkResponse)
       )
    }
 
@@ -92,14 +65,7 @@ class Api {
          fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
             method,
             headers: this._headers,
-         }).then(res => {
-   
-            if (res.ok) {
-               return res.json();
-            } else {
-               return Promise.reject(`Ошибка: ${res.status}`);
-            }
-         })
+         }).then(this._checkResponse)
       )
    }
 }
