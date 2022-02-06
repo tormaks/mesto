@@ -14,23 +14,25 @@ export default class Card {
 
    _toggleLike(evt) {
       if (evt.target.classList.contains('card__like_active')) {
-         api.toggleLikeCard(this._cardId, 'DELETE').then(data => {
-            evt.target.classList.remove('card__like_active');
-            evt.target.nextElementSibling.textContent = data.likes.length;
-            console.log(data);
-         })
+         api.toggleLikeCard(this._cardId, 'DELETE')
+             .then(data => {
+                  evt.target.classList.remove('card__like_active');
+                  evt.target.nextElementSibling.textContent = data.likes.length;
+             }).catch(error => console.log(error));
       } else {
-         api.toggleLikeCard(this._cardId, 'PUT').then(data => {
-            evt.target.classList.add('card__like_active');
-            evt.target.nextElementSibling.textContent = data.likes.length;
-            console.log(data);
-         })
+         api.toggleLikeCard(this._cardId, 'PUT')
+             .then(data => {
+               evt.target.classList.add('card__like_active');
+               evt.target.nextElementSibling.textContent = data.likes.length;
+            }).catch(error => console.log(error));
       }
    }
 
    _deleteCard(evt) {
-      evt.target.closest('.card').remove();
-      api.deleteCard(this._cardId).then(data => console.log(data));
+      api.deleteCard(this._cardId)
+          .then(data => {
+             evt.target.closest('.card').remove();
+          }).catch(error => console.log(error));
    }
 
    _openPopupConfirmDeleteCard(evt) {
