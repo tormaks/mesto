@@ -28,19 +28,9 @@ export default class Card {
       }
    }
 
-   _deleteCard(evt) {
-      api.deleteCard(this._cardId)
-          .then(data => {
-             evt.target.closest('.card').remove();
-          }).catch(error => console.log(error));
-   }
-
    _openPopupConfirmDeleteCard(evt) {
-      const popupConfirmDeleteCard = this._deleteCardClick();
-      document.querySelector('.popup__btn_type_confirm-delete-card').addEventListener('click', () => {
-         this._deleteCard(evt);
-         popupConfirmDeleteCard.close();
-      });
+      const removedCard = evt.target.closest('.card');
+      this._deleteCardClick(removedCard, this._cardId);
    }
 
    _openPopupPicture() {

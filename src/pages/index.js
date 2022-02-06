@@ -1,16 +1,27 @@
 'use strict';
 
 import './index.css';
-import { buttonEditProfile, buttonUpdateAvatar, inputName, inputJob, buttonAddCard, cardsContainerSelector} from '../scripts/utils/constants.js';
 
+import { buttonEditProfile, buttonUpdateAvatar, inputName, inputJob, buttonAddCard, cardsContainerSelector} from '../scripts/utils/constants.js';
 import { formData } from "../scripts/utils/formData.js";
+
 import Card from "../scripts/components/Card.js";
+import Section from '../scripts/components/Section';
 import FormValidator from "../scripts/components/FormValidator.js";
-import Popup from '../scripts/components/Popup.js';
+import PopupWithConfirmDeleteCard from '../scripts/components/PopupWithConfirmDeleteCard';
 import PopupWithImage from "../scripts/components/PopupWithImage.js";
 import PopupWithForm from "../scripts/components/PopupWithForm.js";
 import UserInfo from "../scripts/components/UserInfo.js";
 import Api from "../scripts/components/Api.js"
+
+let userId;
+let cardsList;
+
+const popupPicture = new PopupWithImage('.popup_type_picture');
+popupPicture.setEventListeners();
+
+const popupConfirmDeleteCard = new PopupWithConfirmDeleteCard('.popup_type_confirm-delete-card');
+popupConfirmDeleteCard.setEventListeners();
 
 const api = new Api({
    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-35',
@@ -26,65 +37,77 @@ const userInfo = new UserInfo({
    avatarSelector: '.profile__avatar',
 });
 
-(function updateUser() {
-   api.getUserName()
-   .then(({name, about, avatar}) => {
-      userInfo.setUserInfo(name, about);
-      userInfo.setUserAvatar(avatar);
-   })
-   .catch(err => console.log(err));
-}())
+Promise.all([api.getUserName(), api.getCards()])
+    .then(([userData, cards]) => {
+       updateUser(userData.name, userData.about, userData.avatar, userData._id);
+       updateCards(cards);
+    }).catch(err => console.log(err));
 
-const createPopupPicture = (name, link) => {
-   const popupPicture = new PopupWithImage('.popup_type_picture');
-   popupPicture.open(name, link);
-   popupPicture.setEventListeners();
+const updateUser = (name, about, avatar, id) => {
+   userId = id;
+   userInfo.setUserInfo(name, about);
+   userInfo.setUserAvatar(avatar);
 }
 
-const createPopupConfirmDeleteCard = () => {
-   const popupConfirmDeleteCard = new Popup('.popup_type_confirm-delete-card');
+const updateCards = (cards) => {
+   cardsList = new Section({
+      items: cards.reverse(),
+      renderer: card => {
+         addCard(card.name, card.link, card.owner._id, card._id, card.likes);
+      }
+   }, cardsContainerSelector);
+
+   cardsList.renderItems();
+}
+
+const openPopupPicture = (name, link) => {
+   popupPicture.open(name, link);
+}
+
+const openPopupConfirmDeleteCard = (removedCard, cardId) => {
+   popupConfirmDeleteCard.setRemovedCardData(removedCard, cardId);
    popupConfirmDeleteCard.open();
-   popupConfirmDeleteCard.setEventListeners();
-   return popupConfirmDeleteCard;
 }
 
 const createCard = (name, link, cardId, userId) => {
    const cardElement = new Card(name, link, '#card', '.card', cardId, userId,
       () => {
-         createPopupPicture(name, link);
-   }, () => {
-      const popupConfirmDeleteCard = createPopupConfirmDeleteCard();
-      return popupConfirmDeleteCard;
+         openPopupPicture(name, link);
+   }, (removedCard, cardId) => {
+      openPopupConfirmDeleteCard(removedCard, cardId);
    });
    return cardElement.generateCard();
 }
 
-const addCard = (name, link, userId, cardId, likes) => {
-   const newCard = createCard(name, link, cardId, userId);
+const filterButtonsDelete = (newCard, cardUserId) => {
    const buttonDelete = newCard.querySelector('.card__trash');
+
+   if (cardUserId !== userId) {
+      buttonDelete.remove();
+   }
+}
+
+const filterLikes = (newCard, cardUserId, likes) => {
    const numberLikes = newCard.querySelector('.card__number-likes');
    const buttonLike = newCard.querySelector('.card__like');
+
    likes.forEach(like => {
-      if (like._id === '58b594a40c7b10a97241123a') {
+      if (like._id === userId) {
          buttonLike.classList.add('card__like_active');
       }
    })
+
    numberLikes.textContent = likes.length;
-   if (userId !== '58b594a40c7b10a97241123a') {
-      buttonDelete.remove();
-   }
-   document.querySelector(cardsContainerSelector).prepend(newCard);
 }
 
-(function updateCards() {
-   api.getCards().then(data => {
-      const array = data.reverse();
-      console.log(array);
-      array.forEach(item => {
-         addCard(item.name, item.link, item.owner._id, item._id, item.likes);
-      })
-   });
-}());
+const addCard = (name, link, cardUserId, cardId, likes) => {
+   const newCard = createCard(name, link, cardId, cardUserId);
+
+   filterButtonsDelete(newCard, cardUserId);
+   filterLikes(newCard, cardUserId, likes);
+
+   cardsList.addItem(newCard);
+}
 
 const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formValues, evt) {
    evt.preventDefault();
@@ -93,10 +116,12 @@ const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formV
    api.setUserData({name, about: job})
       .then(data => {
          userInfo.setUserInfo(data.name, data.about);
-         popupEditProfile.close();
-         popupEditProfile.loadingEnd();
       })
       .catch(err => console.log(err))
+       .finally(() => {
+          popupEditProfile.close();
+          popupEditProfile.loadingEnd();
+       })
 });
 
 const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues, evt) {
@@ -106,10 +131,11 @@ const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues,
    api.addNewCard(place, link)
       .then(data => {
          addCard(place, link, data.owner._id, data._id, data.likes);
-         popupAddCard.close();
-         popupAddCard.loadingEnd();
-      })
-      .catch(err => console.log(err));
+      }).catch(err => console.log(err))
+         .finally(() => {
+            popupAddCard.close();
+            popupAddCard.loadingEnd();
+         })
 })
 
 const popupUpdateAvatar = new PopupWithForm('.popup_type_update-avatar', function(formValues, evt) {
@@ -119,10 +145,12 @@ const popupUpdateAvatar = new PopupWithForm('.popup_type_update-avatar', functio
    api.setUserData({avatar}, '/avatar')
       .then(data => {
          userInfo.setUserAvatar(data.avatar);
-         popupUpdateAvatar.close();
-         popupUpdateAvatar.loadingEnd();
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+       .finally(() => {
+          popupUpdateAvatar.close();
+          popupUpdateAvatar.loadingEnd();
+       })
 })
 
 const validationForm = popup => {

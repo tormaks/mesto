@@ -24,7 +24,6 @@ export default class PopupWithForm extends Popup {
 
    loadingEnd() {
       this._btnSubmit.textContent = this._initialName;
-      console.log(this._initialName);
    }
 
    _formSubmission = (evt) => {
@@ -38,6 +37,7 @@ export default class PopupWithForm extends Popup {
 
    close() {
       super.close();
+      this._popup.querySelector('.popup__form').removeEventListener('submit', this._formSubmission);
       if (!this._popup.classList.contains('popup_type_profile')) {
          this._popup.querySelector('.popup__form').reset();
       }
