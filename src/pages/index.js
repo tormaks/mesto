@@ -18,10 +18,8 @@ let userId;
 let cardsList;
 
 const popupPicture = new PopupWithImage('.popup_type_picture');
-popupPicture.setEventListeners();
 
 const popupConfirmDeleteCard = new PopupWithConfirmDeleteCard('.popup_type_confirm-delete-card');
-popupConfirmDeleteCard.setEventListeners();
 
 const api = new Api({
    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-35',
@@ -91,10 +89,10 @@ const popupEditProfile = new PopupWithForm('.popup_type_profile', function(formV
    api.setUserData({name, about: job})
       .then(data => {
          userInfo.setUserInfo(data.name, data.about);
+         popupEditProfile.close();
       })
       .catch(err => console.log(err))
        .finally(() => {
-          popupEditProfile.close();
           popupEditProfile.loadingEnd();
        })
 });
@@ -106,9 +104,9 @@ const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues,
    api.addNewCard(place, link)
       .then(data => {
          addCard(place, link, userId, data.owner._id, data._id, data.likes);
+         popupAddCard.close();
       }).catch(err => console.log(err))
          .finally(() => {
-            popupAddCard.close();
             popupAddCard.loadingEnd();
          })
 })
@@ -120,10 +118,10 @@ const popupUpdateAvatar = new PopupWithForm('.popup_type_update-avatar', functio
    api.setUserData({avatar}, '/avatar')
       .then(data => {
          userInfo.setUserAvatar(data.avatar);
+         popupUpdateAvatar.close();
       })
       .catch(err => console.log(err))
        .finally(() => {
-          popupUpdateAvatar.close();
           popupUpdateAvatar.loadingEnd();
        })
 })
@@ -145,19 +143,16 @@ const openPopupEditProfile = () => {
    inputJob.value = job;
    popupEditFormValidator.resetInputsErrors();
    popupEditProfile.open();
-   popupEditProfile.setEventListeners();
 };
 
 const openPopupAddCard = () => {
    popupAddCardFormValidator.resetInputsErrors();
    popupAddCard.open();
-   popupAddCard.setEventListeners();
 };
 
 const openPopupUpdateAvatar = () => {
    popupUpdateAvatarFormValidator.resetInputsErrors();
    popupUpdateAvatar.open();
-   popupUpdateAvatar.setEventListeners();
 }
 
 buttonEditProfile.addEventListener('click', openPopupEditProfile);

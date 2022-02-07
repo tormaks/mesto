@@ -2,9 +2,19 @@ import Popup from "./Popup.js";
 import api from '../../pages/index';
 
 export default class PopupWithConfirmDeleteCard extends Popup {
-	constructor(popupSelector, card, cardId) {
+	constructor(popupSelector) {
 		super(popupSelector);
 		this._deleteCard = this._deleteCard.bind(this);
+	}
+
+	_setEventListeners() {
+		super._setEventListeners();
+		document.querySelector('.popup__btn_type_confirm-delete-card').addEventListener('click', this._deleteCard);
+	}
+
+	_removeEventListeners() {
+		super._removeEventListeners();
+		document.querySelector('.popup__btn_type_confirm-delete-card').removeEventListener('click', this._deleteCard);
 	}
 
 	setRemovedCardData(card, cardId) {
@@ -18,15 +28,5 @@ export default class PopupWithConfirmDeleteCard extends Popup {
 				this._card.remove();
 				this.close();
 			}).catch(error => console.log(error));
-	}
-
-	open() {
-		super.open();
-		document.querySelector('.popup__btn_type_confirm-delete-card').addEventListener('click', this._deleteCard);
-	}
-
-	close() {
-		super.close()
-		document.querySelector('.popup__btn_type_confirm-delete-card').removeEventListener('click', this._deleteCard);
 	}
 }
