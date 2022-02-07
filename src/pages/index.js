@@ -53,7 +53,7 @@ const updateCards = (cards) => {
    cardsList = new Section({
       items: cards.reverse(),
       renderer: card => {
-         addCard(card.name, card.link, card.owner._id, card._id, card.likes);
+         addCard(card.name, card.link, userId, card.owner._id, card._id, card.likes);
       }
    }, cardsContainerSelector);
 
@@ -69,8 +69,8 @@ const openPopupConfirmDeleteCard = (removedCard, cardId) => {
    popupConfirmDeleteCard.open();
 }
 
-const createCard = (name, link, cardId, userId) => {
-   const cardElement = new Card(name, link, '#card', '.card', cardId, userId,
+const createCard = (name, link, userId, cardUserId, cardId, likes) => {
+   const cardElement = new Card(name, link, '#card', '.card', userId, cardUserId, cardId, likes,
       () => {
          openPopupPicture(name, link);
    }, (removedCard, cardId) => {
@@ -79,33 +79,8 @@ const createCard = (name, link, cardId, userId) => {
    return cardElement.generateCard();
 }
 
-const filterButtonsDelete = (newCard, cardUserId) => {
-   const buttonDelete = newCard.querySelector('.card__trash');
-
-   if (cardUserId !== userId) {
-      buttonDelete.remove();
-   }
-}
-
-const filterLikes = (newCard, cardUserId, likes) => {
-   const numberLikes = newCard.querySelector('.card__number-likes');
-   const buttonLike = newCard.querySelector('.card__like');
-
-   likes.forEach(like => {
-      if (like._id === userId) {
-         buttonLike.classList.add('card__like_active');
-      }
-   })
-
-   numberLikes.textContent = likes.length;
-}
-
-const addCard = (name, link, cardUserId, cardId, likes) => {
-   const newCard = createCard(name, link, cardId, cardUserId);
-
-   filterButtonsDelete(newCard, cardUserId);
-   filterLikes(newCard, cardUserId, likes);
-
+const addCard = (name, link, userId, cardUserId, cardId, likes) => {
+   const newCard = createCard(name, link, userId, cardUserId, cardId, likes);
    cardsList.addItem(newCard);
 }
 
@@ -130,7 +105,7 @@ const popupAddCard = new PopupWithForm('.popup_type_place', function(formValues,
    const { place, link } = formValues;
    api.addNewCard(place, link)
       .then(data => {
-         addCard(place, link, data.owner._id, data._id, data.likes);
+         addCard(place, link, userId, data.owner._id, data._id, data.likes);
       }).catch(err => console.log(err))
          .finally(() => {
             popupAddCard.close();
